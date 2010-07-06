@@ -6,6 +6,51 @@ Inchman provides a convenient and simple way to run existing reaction-diffusion 
 = Running a simple example model =
 
 == Upload the SBML file ==
+{{{
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Simple 2d annihilation model with two species (corresponding to annihilation.xml in MesoRD)
+-->
+<sbml xmlns="http://www.sbml.org/sbml/level2/version3" level="2" version="3">
+
+  <model name="Simple Annihilation">
+    <listOfCompartments>
+      <compartment id="World"/>
+    </listOfCompartments>
+
+    <listOfSpecies>
+      <species id="A" name="Species A"  initialAmount="0" compartment="World"/>
+      <species id="B" name="Species B"  initialAmount="0" compartment="World"/>
+    </listOfSpecies>
+
+    <listOfParameters>
+      <parameter id="k"  value="150.79"/>
+    </listOfParameters>
+
+    <listOfReactions>
+      <reaction id="Annihilation">
+        <listOfReactants>
+          <speciesReference species="A"/>
+          <speciesReference species="B"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k </ci>
+              <ci> A </ci>
+              <ci> B </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
+}}}
+
+<img src='http://img571.imageshack.us/img571/7818/screenshotupload.png' border='0' width='700' height='450'/>
+
 
 == Specifying the geometry ==
 
