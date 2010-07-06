@@ -1,0 +1,18 @@
+#summary Tutorial for using Inchman, the online user interface to GPGMP.
+
+= Introduction =
+Inchman provides a convenient and simple way to run existing reaction-diffusion models on an GPGMP implementation without having to download and compile the source code. Users can define their reaction networks in [http://sbml.org/Main_Page SBML] and upload it to Inchman. The geometry specifications and simulation parameters are defined through the web interface. The whole model can then be submitted to our GPU cluster and, upon successful execution, a summary of the results will be mailed to the user.
+
+= Running a simple example model =
+
+== Upload the SBML file ==
+
+== Specifying the geometry ==
+
+== Running the model ==
+
+= Analysis =
+
+== Importing the output summary into MATLAB ==
+
+= More examples =
