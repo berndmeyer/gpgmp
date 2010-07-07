@@ -4,8 +4,12 @@
 Inchman provides a convenient and simple way to run existing reaction-diffusion models on an GPGMP implementation without having to download and compile the source code. Users can define their reaction networks in [http://sbml.org/Main_Page SBML] and upload it to Inchman. The geometry specifications and simulation parameters are defined through the web interface. The whole model can then be submitted to our GPU cluster and, upon successful execution, a summary of the results will be mailed to the user.
 
 = Running a simple example model =
+The first step is to define the reaction network in a valid [http://sbml.org SBML] file. For the purpose of this tutorial, a simple model consisting of two species _A_ and _B_ and an annihilation reaction
 
-== Upload the SBML file ==
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="A + B -> \emptyset"/>
+
+is sufficient. The according SBML file, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
+
 {{{
 <?xml version="1.0" encoding="utf-8"?>
 <!--
@@ -48,6 +52,11 @@ Inchman provides a convenient and simple way to run existing reaction-diffusion 
   </model>
 </sbml>
 }}}
+Note that the `species` attributes `initialAmount` and `compartment` are only present to guarantee compliance with the SBML specification and will be ignored by Inchman. In fact, the geometry of the compartments and the initial amounts of the species will be specified in at a [#Specifying_the_geometry later stage]. We will come to that in a minute.
+
+ _Note_: Currently, Inchman does not yet support dimensional parameters. Instead, reaction rates are assumed to be given in _per subvolume per second_. This requires the user to adapt model files if the number of grid cells in the model changes.
+
+== Upload the SBML file ==
 
 <img src='http://img571.imageshack.us/img571/7818/screenshotupload.png' border='0' width='700' height='450'/>
 
