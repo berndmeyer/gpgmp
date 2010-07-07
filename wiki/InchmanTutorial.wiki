@@ -15,7 +15,7 @@ is sufficient. The according SBML file, which is listed below, is part of the [h
 <!--
    Simple 2d annihilation model with two species (corresponding to annihilation.xml in MesoRD)
 -->
-<sbml xmlns="http://www.sbml.org/sbml/level2/version3" level="2" version="3">
+<sbml xmlns="http://www.sbml.org/sbml/level2/version3" level="2" version="the simulation3">
 
   <model name="Simple Annihilation">
     <listOfCompartments>
@@ -61,11 +61,21 @@ We are now ready to upload the model file to Inchman. Start Inchman by following
 
 http://monash-inchman.appspot.com/.
 
+The web interface provides the functionality to upload SBML files and specify the compartment geometries, species diffusivities and initial amounts, and localize reactions to compartments. The user can also change runtime parameters and finally submit the simulation to our cluster.
 
-<img src='http://img571.imageshack.us/img571/7818/screenshotupload.png' border='0' width='700' height='450'/>
+<img src='http://img695.imageshack.us/img695/3227/screenshottutorialuploa.png' border='0' width='700' height='450'/>
 
+You can upload the SBML model file by going to the upper-left corner of the main screen. Before the user is allowed to go on, the model file is checked for syntactical validity. If your file is rejected, you can manually check it using the [http://sbml.org/Facilities/Validator SBML online validator] and thus get an idea about possible problems with your code.
+
+  _Note_: After changing the local SBML file, you have to press the "Refresh" button of your browser in order to clear the server cache before uploading the new file!
 
 == Specifying the geometry ==
+
+<img src='http://img69.imageshack.us/img69/780/screenshottutorialgeome.png' border='0' width='700' height='450'/>
+
+We now need to tell Inchman where the compartments are physically located. In the current version, the simulation domain is a 3-dimensional Cartesian grid divided into cuboid subvolumes (where the z-extension is only one subvolume, so effectively the simulation is 2.5 dimensional). Inchman only understands rectangular compartments which are defined by the position of the bottom-left corner and their width and height. The compartments are _declared_ in the underlying SBML model file but their geometry is _defined_ here. The reason for that dichotomy is that SBML does not understand spatially extended compartments and our main aim is to allow the user to upload existing models without changes.
+
+ _Note_: The position and extensions of the subvolumes are given in grid coordinates. Consequently, the user most likely would want to adapt these specifications if they change the granularity of the grid.
 
 == Running the model ==
 
