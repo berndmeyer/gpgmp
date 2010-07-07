@@ -52,11 +52,15 @@ is sufficient. The according SBML file, which is listed below, is part of the [h
   </model>
 </sbml>
 }}}
-Note that the `species` attributes `initialAmount` and `compartment` are only present to guarantee compliance with the SBML specification and will be ignored by Inchman. In fact, the geometry of the compartments and the initial amounts of the species will be specified in at a [#Specifying_the_geometry later stage]. We will come to that in a minute.
+Note that the `species` attributes `initialAmount` and `compartment` are only present to guarantee compliance with the SBML specification and will be ignored by Inchman. In fact, the geometry of the compartments and the initial amounts of the species will be specified at a [#Specifying_the_geometry later stage]. We will come to that in a minute.
 
  _Note_: Currently, Inchman does not yet support dimensional parameters. Instead, reaction rates are assumed to be given in _per subvolume per second_. This requires the user to adapt model files if the number of grid cells in the model changes.
 
 == Upload the SBML file ==
+We are now ready to upload the model file to Inchman. Start Inchman by following the link to 
+
+http://monash-inchman.appspot.com/.
+
 
 <img src='http://img571.imageshack.us/img571/7818/screenshotupload.png' border='0' width='700' height='450'/>
 
