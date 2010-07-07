@@ -9,7 +9,7 @@ The first step is to define the reaction network in a valid [http://sbml.org SBM
 
 <wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="A + B -> C"/>
 
-is sufficient. Here, C is a "dummy" species which we use to track the number of reactions. The corresponding SBML file, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
+is sufficient. Here, C is a "dummy" species which we use to track the number of reactions. The corresponding SBML file `simple_annihilation.xml`, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
 
 {{{
 <?xml version="1.0" encoding="utf-8"?>
@@ -105,7 +105,7 @@ Inchman allows the user to localize reactions to particular compartment. If a re
 == Running the model ==
 <img src='http://img143.imageshack.us/img143/524/screenshottutorialrun.png' border='0' width='700' height='450'/>
 
-We are now in a position to run the model. First, it is recommended to download the geometry extensions for later reuse. Later on, you can always upload the specifications using the `Upload` button.
+We are now in a position to run the model. First, it is recommended to download the geometry extensions for later reuse. Later on, you can always upload the specifications using the `Upload` button. The geometry specifications for this tutorial example can be found in the file `simple_annihilation-imex.xml'.
 
 We set the physical extension of our model to 2 micrometers and the granularity to 32 cells per dimension.
 
@@ -205,6 +205,18 @@ Voila! You should get a plot similar to this one:
 
 <img src='http://img294.imageshack.us/img294/4418/annihilationresults.png' border='0'/>
 
-This concludes the basic tutorial. Please have a look at [#More_examples].
+This concludes the basic tutorial. Please have a look at [#More_examples the other examples].
 
 = More examples =
+
+== Spatially homogeneous reaction networks ==
+GPGMP allows to simulate spatially homogeneous reaction networks by setting the diffusivity to `0`. A species with vanishing diffusivity will not diffuse and is therefore constrained to the subvolume where it is initially located. We demonstrate this feature with a simple reaction network with two species, `A` and `B`, two annihilation reactions,
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="A + A \stackrel{k_1}{->} \emptyset,"/>
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="A + B \stackrel{k_2}{->} \emptyset,"/>
+
+and two creation reactions,
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="\emptyset \stackrel{k_3}{->}A,"/>
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="\emptyset \stackrel{k_4}{->}B."/>
+
+Following [References#Erban07 Erban _et al_. (2007)]
+ 
