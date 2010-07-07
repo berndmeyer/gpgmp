@@ -1,0 +1,2 @@
+====Erban07====
+Erban, R., Chapman, J., and Maini, P. K. (2007). A practical guide to stochastic simulations of reaction-diffusion processes. http://arxiv.org/abs/0704.1908v2.
