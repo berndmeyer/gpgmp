@@ -6,16 +6,16 @@ Inchman provides a convenient and simple way to run existing reaction-diffusion 
 = Running a simple example model =
 The first step is to define the reaction network in a valid [http://sbml.org SBML] file. For the purpose of this tutorial, a simple model consisting of two species _A_ and _B_ and an annihilation reaction
 
-<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="A + B -> \emptyset"/>
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="A + B -> C"/>
 
-is sufficient. The corresponding SBML file, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
+is sufficient. Here, C is a "dummy" species which we use to track the number of reactions. The corresponding SBML file, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
 
 {{{
 <?xml version="1.0" encoding="utf-8"?>
 <!--
    Simple 2d annihilation model with two species (corresponding to annihilation.xml in MesoRD)
 -->
-<sbml xmlns="http://www.sbml.org/sbml/level2/version3" level="2" version="the simulation3">
+<sbml xmlns="http://www.sbml.org/sbml/level2/version3" level="2" version="3">
 
   <model name="Simple Annihilation">
     <listOfCompartments>
@@ -25,6 +25,7 @@ is sufficient. The corresponding SBML file, which is listed below, is part of th
     <listOfSpecies>
       <species id="A" name="Species A"  initialAmount="0" compartment="World"/>
       <species id="B" name="Species B"  initialAmount="0" compartment="World"/>
+      <species id="C" name="Species C"  initialAmount="0" compartment="World"/>
     </listOfSpecies>
 
     <listOfParameters>
@@ -37,6 +38,9 @@ is sufficient. The corresponding SBML file, which is listed below, is part of th
           <speciesReference species="A"/>
           <speciesReference species="B"/>
         </listOfReactants>
+	<listOfProducts>
+          <speciesReference species="C"/>
+	</listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
@@ -51,6 +55,7 @@ is sufficient. The corresponding SBML file, which is listed below, is part of th
     </listOfReactions>
   </model>
 </sbml>
+
 }}}
 Note that the `species` attributes `initialAmount` and `compartment` are only present to guarantee compliance with the SBML specification and will be ignored by Inchman. In fact, the geometry of the compartments and the initial amounts of the species will be specified at a [#Specifying_the_geometry later stage]. We will come to that in a minute.
 
@@ -89,7 +94,7 @@ The `species` panel allows us to set the diffusivity (in units micrometer^2^ s^-
 
  _Note_: If compartments are overlapping, the particle number in the overlapping region will be set by the last compartment in the list. If we define, for example, a compartment "Source" with extent `(16,16,1,1)` and initial count 10000 and another compartment "World" which covers the whole domain, `(0,0,32,32)`, and initial particle count 0, the overlapping region will contain no particles. It is best to avoid overlapping compartments.
 
-We set the diffusivity of both species to `5` and the initial amount in the "World" compartment to `10000`.
+We set the diffusivity of all species to `1` and the initial amount of species A and B in the "World" compartment to `10000`. Initially, no particles of species C should be present so we set it to `0`.
 
 == Localizing the reactions ==
 <img src='http://img805.imageshack.us/img805/8796/screenshottutorialreact.png' border='0' width='700' height='450'/>
@@ -105,14 +110,100 @@ We set the physical extension of our model to 2 micrometers and the granularity 
 
  _Note_: If you change the granularity of the simulation domain you would in most cases want to adapt the reaction rates and the compartment specifications!
 
-In order to get a good statistical average, we perform 10 runs (the results will be automatically averaged over all runs). We want the simulation to end at 0.5 s and receive intermediate outputs each 0.1 s. We allow a maximum number of diffusion steps of 100000.
+In order to get a good statistical average, we perform 10 runs (the results will be automatically averaged over all runs). We want the simulation to end at 0.1 s and receive intermediate outputs each 0.01 s. We allow a maximum number of diffusion steps of 100000.
 
 Upon hitting the `Simulate Model...` button, a window pops up asking the user to enter their e-mail address. The model will then be sent to the cluster and the user receives an email with the results (or an error message..) a little while later. Please check your spam folder if you do not get any mail.
 
  Internally, the SBML model file and the geometry extensions are translated into C++ source code that utilizes the GPGMP library. The project is compiled and run on our GPU cluster. A PYTHON script controls the execution, collects the results and mails them back to you.
 
 = Analysis =
+If all went well, you should receive an e-mail with the results shortly after submission. The contents of the attached file `results.csv` should look like this:
+{{{
+# time	World
+# species A
+0	9216
+0.010026	677.5
+0.0200521	353.5
+0.030013	244.5
+0.0400391	188
+0.05	149.5
+0.0600261	130.5
+0.0700521	113.5
+0.080013	100
+0.0900391	89.5
+0.1	77.5
+
+# species B
+0	9216
+0.010026	677.5
+0.0200521	353.5
+0.030013	244.5
+0.0400391	188
+0.05	149.5
+0.0600261	130.5
+0.0700521	113.5
+0.080013	100
+0.0900391	89.5
+0.1	77.5
+
+# species C
+0	0
+0.010026	8538.5
+0.0200521	8862.5
+0.030013	8971.5
+0.0400391	9028
+0.05	9066.5
+0.0600261	9085.5
+0.0700521	9102.5
+0.080013	9116
+0.0900391	9126.5
+0.1	9138.5
+}}}
+The summary file contains the number of species in each compartment over time (averaged over all runs). If you need more detailed information, we recommend to build your models with the GPGMP library which allows to output the particle count in each subvolume individually.
 
 == Importing the output summary into MATLAB ==
+The results are written in a CSV format and can thus easily be imported into standard analysis software. For convenience, we provide a MATLAB script to extract useful information from a `results.csv` file. The script can be found in the `matlab` folder of the analysis package in the [http://code.google.com/p/gpgmp/downloads/list download] section. We quickly demonstrate how to use this script.
+
+{{{
+>> [comps, specs, time, state]=read_inchman('/home/matthias/source/Matlab/results.csv');
+>> comps
+
+comps = 
+
+    'World'
+
+>> specs
+
+specs = 
+
+    'A'    'B'    'C'
+
+>> time
+
+time =
+
+         0
+    0.0100
+    0.0201
+    0.0300
+    0.0400
+    0.0500
+    0.0600
+    0.0701
+    0.0800
+    0.0900
+    0.1000
+
+>> plot(time, [state(:, 1, 1), state(:,1,3)], 'o')
+>> xlabel('time [s]')
+>> ylabel('species count')
+>> legend('species A', 'species C', 'Location', 'East')
+}}}
+
+Voila! You should get a plot similar to this one:
+
+<img src='http://img294.imageshack.us/img294/4418/annihilationresults.png' border='0'/>
+
+This concludes the basic tutorial. Please have a look at [#More_examples].
 
 = More examples =
