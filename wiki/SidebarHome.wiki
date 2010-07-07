@@ -1,4 +1,5 @@
 #summary sidebar navigation for the project home page
 
-  * [#Introduction General introduction]
-  * [#Usage Usage information]
+  * [Introduction General introduction]
+  * [Usage Usage information]
+  * [InchmanTutorial Tutorial for Inchman, the web interface to GPGMP]
