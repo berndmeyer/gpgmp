@@ -77,6 +77,8 @@ We now need to tell Inchman where the compartments are physically located. In th
 
  _Note_: The position and extensions of the subvolumes are given in grid coordinates. Consequently, the user most likely would want to adapt these specifications if they change the granularity of the grid.
 
+Our model has only one compartment "World" defined which we want to span the whole simulation domain. We thus set the compartment geometry tuple to `(0,0,32,32)`.
+
 == Running the model ==
 
 = Analysis =
