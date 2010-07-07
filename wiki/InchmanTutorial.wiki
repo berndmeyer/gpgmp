@@ -8,7 +8,7 @@ The first step is to define the reaction network in a valid [http://sbml.org SBM
 
 <wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="A + B -> \emptyset"/>
 
-is sufficient. The according SBML file, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
+is sufficient. The corresponding SBML file, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
 
 {{{
 <?xml version="1.0" encoding="utf-8"?>
@@ -79,7 +79,37 @@ We now need to tell Inchman where the compartments are physically located. In th
 
 Our model has only one compartment "World" defined which we want to span the whole simulation domain. We thus set the compartment geometry tuple to `(0,0,32,32)`.
 
+== Setting the species parameters ==
+
+<img src='http://img190.imageshack.us/img190/241/screenshottutorialspeci.png' border='0' width='700' height='450'/>
+
+The `species` panel allows us to set the diffusivity (in units micrometer^2^ s^-1^) and the initial particle count per compartment for each species.
+
+ _Note_: The given number of particles is distributed _homogeneously_ over the compartment, i.e. each subvolume of the compartment will contain exactly the same number of particles. If the total particle count cannot be divided evenly between the subvolume, rounding rules apply.
+
+ _Note_: If compartments are overlapping, the particle number in the overlapping region will be set by the last compartment in the list. If we define, for example, a compartment "Source" with extent `(16,16,1,1)` and initial count 10000 and another compartment "World" which covers the whole domain, `(0,0,32,32)`, and initial particle count 0, the overlapping region will contain no particles. It is best to avoid overlapping compartments.
+
+We set the diffusivity of both species to `5` and the initial amount in the "World" compartment to `10000`.
+
+== Localizing the reactions ==
+<img src='http://img805.imageshack.us/img805/8796/screenshottutorialreact.png' border='0' width='700' height='450'/>
+
+Inchman allows the user to localize reactions to particular compartment. If a reaction cannot occur in a particular compartment, the corresponding checkbox needs to be unticked. We do not use this feature in this tutorial model.
+
 == Running the model ==
+<img src='http://img143.imageshack.us/img143/524/screenshottutorialrun.png' border='0' width='700' height='450'/>
+
+We are now in a position to run the model. First, it is recommended to download the geometry extensions for later reuse. Later on, you can always upload the specifications using the `Upload` button.
+
+We set the physical extension of our model to 2 micrometers and the granularity to 32 cells per dimension.
+
+ _Note_: If you change the granularity of the simulation domain you would in most cases want to adapt the reaction rates and the compartment specifications!
+
+In order to get a good statistical average, we perform 10 runs (the results will be automatically averaged over all runs). We want the simulation to end at 0.5 s and receive intermediate outputs each 0.1 s. We allow a maximum number of diffusion steps of 100000.
+
+Upon hitting the `Simulate Model...` button, a window pops up asking the user to enter their e-mail address. The model will then be sent to the cluster and the user receives an email with the results (or an error message..) a little while later. Please check your spam folder if you do not get any mail.
+
+ Internally, the SBML model file and the geometry extensions are translated into C++ source code that utilizes the GPGMP library. The project is compiled and run on our GPU cluster. A PYTHON script controls the execution, collects the results and mails them back to you.
 
 = Analysis =
 
