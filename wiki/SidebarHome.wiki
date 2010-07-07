@@ -2,4 +2,5 @@
 
   * [Introduction General introduction]
   * [Usage Usage information]
-  * [InchmanTutorial Tutorial for Inchman, the web interface to GPGMP]
+  * [InchmanTutorial]
+    * [InchmanTutorial#Introduction Introduction]
