@@ -4,3 +4,5 @@
   * [Usage Usage information]
   * [InchmanTutorial]
     * [InchmanTutorial#Introduction Introduction]
+    * [InchmanTutorial#Running_a_simple_example_model Example walkthrough]
+    * [InchmanTutorial#More_examples More examples]
