@@ -225,7 +225,7 @@ Following [References#Erban07 Erban et al. (2007)], we choose the following para
 || k,,3,, || 1.2 s^-1^ ||
 || k,,4,, || 1.0 s^-1^ ||
 
-The model file and the geometry extensions can be found in the [http://code.google.com/p/gpgmp/downloads/list Inchman example package], under `simple_annihilation.xml` and simple_annihilation-imex.xml`, respectively. Since both species have vanishing diffusivity, we run an independent simulation in each subvolume in parallel. By choosing a granularity of `128x128` and running `10` models, we effectively run a total of 163840 independent simulations! The output particle count can then easily be divided by `128x128` to get the average. We find an average count for species `A` of `9.6` and for species `B` of `12.1`, which, incidentally, agrees with [References#Erban07 Erban et al. (2007)].
+The model file and the geometry extensions can be found in the [http://code.google.com/p/gpgmp/downloads/list Inchman example package], under `simple_annihilation.xml` and `simple_annihilation-imex.xml`, respectively. Since both species have vanishing diffusivity, we run an independent simulation in each subvolume in parallel. By choosing a granularity of `128x128` and running `10` models, we effectively run a total of 163840 independent simulations! The output particle count can then easily be divided by `128x128` to get the average. We find an average count for species `A` of `9.6` and for species `B` of `12.1`, which, incidentally, agrees with [References#Erban07 Erban et al. (2007)].
 
   _Note_: Due to the underlying GPGMP algorithm, an output of intermediate time steps is currently not possible if the diffusivity is 0. Only the final result will be printed.
  
