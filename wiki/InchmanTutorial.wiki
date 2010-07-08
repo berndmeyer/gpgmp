@@ -62,6 +62,8 @@ Note that the `species` attributes `initialAmount` and `compartment` are only pr
 
  _Note_: Currently, Inchman does not yet support dimensional parameters. Instead, reaction rates are assumed to be given in _per subvolume per second_. This requires the user to adapt model files if the number of grid cells in the model changes.
 
+ _Note_: GPGMP (and therefore Inchman) determines the correct rate law for a reaction automatically from the `listOfReactants' and supports zeroth- to second-order reactions. The MathML kinetic law given is only checked for consistency and will be ignored otherwise.
+
 == Upload the SBML file ==
 We are now ready to upload the model file to Inchman. Start Inchman by following the link to 
 
