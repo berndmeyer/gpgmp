@@ -1,7 +1,44 @@
 #sidebar SidebarHome
 
+====Ander04====
+Ander, M., Beltrao, P., Ventura, B. D., Ferkinghoff-Borg, J., Foglierini, M., Lemerle,
+C., Tomas-Oliveira, I., and Serrano, L. (2004). Smartcell, a framework to
+simulate cellular processes that combines stochastic approximation with diffusion
+and localisation: analysis of simple networks. _Systems Biology_, *1*(1), 129–138.
+
+====Elf03====
+Elf, J., Doncic, A., and Ehrenberg, M. (2003). Mesoscopic reaction-diffusion in
+intracellular signaling. volume 5110, pages 114–124. SPIE.
+
 ====Erban07====
 Erban, R., Chapman, J., and Maini, P. K. (2007). A practical guide to stochastic simulations of reaction-diffusion processes. http://arxiv.org/abs/0704.1908v2.
+
+====Gibson00====
+Michael A. Gibson and Jehoshua Bruck (2000).  "Efficient Exact Stochastic Simulation of Chemical Systems with Many Species and Many Channels." Journal of Physical Chemistry A, *104*(9), 1876-1889.
+
+====Gillespie77====
+Gillespie, D. T. (1976). A general method for numerically simulating the stochastic
+time evolution of coupled chemical reactions. _Journal of Computational Physics_,
+*22*(4), 403–434.
+
+====Hattne05====
+Hattne, J., Fange, D., and Elf, J. (2005). Stochastic reaction-diffusion simulation with
+MesoRD. _Bioinformatics_, *21*(12), 2923–2924.
+
+====Li06====
+Li, H. and Petzold, L. (2006). Logarithmic direct method for discrete stochastic
+simulation of chemically reacting systems. Technical report, Department of
+Computer Science, University of California, Santa Barbara.
+
+====Lis09====
+Lis, M., Artyomov, M. N., Devadas, S., and Chakraborty, A. K. (2009). Efficient
+stochastic simulation of reaction-diffusion processes via direct compilation.
+_Bioinformatics_, *25*(17), 2289–2291.
+
+====Rodriguez06====
+Rodriguez, J. V., Kaandorp, J. A., Dobrzy ́ ski, M., and Blom, J. G. (2006). Spatial
+stochastic modelling of the phosphoenolpyruvate-dependent phosphotransferase
+(pts) pathway in escherichia coli. _Bioinformatics_, *22*(15), 1895–1901.
 
 ====Vigelius10====
 Vigelius, M., Meyer, B., and Lane, A. (2010). Accelerating Reaction-Diffusion Simulations with General-Purpose Graphics Processing Units. _in preparation_
