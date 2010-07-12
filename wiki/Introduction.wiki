@@ -1,5 +1,5 @@
 #summary General introduction to reaction-diffusion equations and GPGMP
-
+#sidebar SidebarHome
 
 =Abstract=
 GPGMP provides an implementation of a spatially-resolved stochastic simulation algorithm on general-purpose graphics processing units (GPGPUs). This algorithm, designed to solve reaction-diffusion equations on a mesoscopic level, has widespread applications in computational biology, molecular chemistry and social systems research. For our implementation, we use the Gillespie multi-particle method, which is well-suited for GPGPUs. In preliminary tests, we could obtain speed ups of around 1-2 orders of magnitudes as compared to standard implementations on CPUs.
