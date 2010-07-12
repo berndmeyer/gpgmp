@@ -6,6 +6,11 @@ C., Tomas-Oliveira, I., and Serrano, L. (2004). Smartcell, a framework to
 simulate cellular processes that combines stochastic approximation with diffusion
 and localisation: analysis of simple networks. _Systems Biology_, *1*(1), 129–138.
 
+====Chopard94====
+Chopard, B., Frachebourg, L., and Droz, M. (1994). Multiparticle Lattice Gas
+Automata for Reaction Diffusion Systems. _International Journal of Modern Physics_
+C, *5*, 47–63.
+
 ====Elf03====
 Elf, J., Doncic, A., and Ehrenberg, M. (2003). Mesoscopic reaction-diffusion in
 intracellular signaling. volume 5110, pages 114–124. SPIE.
