@@ -14,8 +14,8 @@ In many [#Applications applications], most notably in a biological and chemical 
 
 A microscopic approach, however, is often cumbersome and computer simulations to obtain realizations of reaction-diffusion networks are quite costly. Furthermore, it is often not necessary to distinguish between individual entities and a _mesoscopic_ approach is sufficient. In a mesoscopic description, the domain of interest is divided into small subvolumes of a convenient granularity. Instead of tracing the position of each individual particle through time, one then collectively keeps track of the number of particles in each subvolume.
 
-
 =Gillespie Multiparticle Algorithm=
+A wide variety of stochastic simulation algorithms exist to compute single realizations of reaction diffusion networks `[`see, e.g., [References#Vigelius10 Vigelius et al (in preparation)] for a brief overview`]`.
 
 =Implementation on GPGPUs=
 
