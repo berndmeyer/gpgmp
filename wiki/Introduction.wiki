@@ -21,7 +21,7 @@ All algorithms in the previous paragraph compute _exact_ realizations of stochas
 
 http://img208.imageshack.us/img208/1723/reactiondiffusion.png
 
-GMP handles the diffusion part of the reaction-diffusion network trough a multiparticle lattice gas automaton [References#Chopard94 (Chopard et al., 1994)] and the reaction part via Gillespie's direct method [References#Gillespie77 (Gillespie, 1977)]. The time step is chosen globally according to the diffusion constants of each species and the dimensions of each lattice cell. In each iteration, all reactions are performed independently in each subvolume. At the end, all particles are diffused according to the cellular automaton rule.
+GMP handles the diffusion part of the reaction-diffusion network trough a multiparticle lattice gas automaton [References#Chopard94 (Chopard et al., 1994)] and the reaction part via Gillespie's direct method [References#Gillespie77 (Gillespie, 1977)]. The time step is chosen globally according to the diffusion constants of each species and the dimensions of each lattice cell. In each iteration, all reactions are performed independently in each subvolume. At the end, all particles are diffused according to the cellular automaton rule. Since all cells are treated independently during each time step, this algorithm is well suited for a data-parallel implementation on general-purpose graphics processing units (GPGPUs).
 
 =Implementation on GPGPUs=
 
