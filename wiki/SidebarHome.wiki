@@ -1,6 +1,12 @@
 #summary sidebar navigation for the project home page
 
   * [Introduction General introduction]
+    * [Introduction#Abstract Abstract]
+    * [Introduction#Reaction-Diffusion_Networks Reaction-diffusion networks]
+    * [Introduction#Gillespie_Multiparticle_Algorithm_Gillespie Multiparticle Algorithm]
+    * [Introduction#Implementation_on_GPGPUs Implementation on GPGPUs]
+    * [Introduction#Getting started_with_GPGMP_and_Inchman Getting started]
+    * [Introduction#Applications Applications]
   * [Usage Usage information]
   * [InchmanTutorial]
     * [InchmanTutorial#Introduction Introduction]
