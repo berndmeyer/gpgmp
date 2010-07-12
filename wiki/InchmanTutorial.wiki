@@ -230,4 +230,24 @@ Following [References#Erban07 Erban et al. (2007)], we choose the following para
 The model file and the geometry extensions can be found in the [http://code.google.com/p/gpgmp/downloads/list Inchman example package], under `simple_annihilation.xml` and `simple_annihilation-imex.xml`, respectively. Since both species have vanishing diffusivity, we run an independent simulation in each subvolume in parallel. By choosing a granularity of `128x128` and running `10` models, we effectively run a total of 163840 independent simulations! The output particle count can then easily be divided by `128x128` to get the average. We find an average count for species `A` of `9.6` and for species `B` of `12.1`, which, incidentally, agrees with [References#Erban07 Erban et al. (2007)].
 
   _Note_: Due to the underlying GPGMP algorithm, an output of intermediate time steps is currently not possible if the diffusivity is 0. Only the final result will be printed.
- 
+
+== Localized A+B annihilation problem ==
+The purpose of this example is two-fold:
+  # To introduce the concept of localized reactions and
+  # to demonstrate how spatially resolved output can be achieved using Inchman.
+
+  _Note_: We strongly recommend building more sophisticated models from source, in particular if you wish to have full access to the spatially resolved output data.
+
+The model used in this example consists of two species, A and B, and a reaction network identical to the [#Spatially_homogeneous_reaction_networks previous example], with the only exception that the reaction rates of the creation reactions depend on the position in the computational domain as follows (cf. [References#Erban07 Erban et al., 2007]):
+
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="k_3(x) = {(k_3, x \le 9L/10), (0, x>9/10 L):}"/>
+
+and
+
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="k_4(x) = {(0, x \le 2L/5), (k_4, x>2/5 L):}"/>
+
+where L is the side length of the domain. Since there is no dependence on the y coordinate, it is sufficient to define exactly one compartment for each subvolume along the x-axis. Obviously, a coarser granularity can be achieved by bundling several subvolumes in one compartment. Inchman allows to enable and disable reactions in individual compartments to achieve localization. For this example, we _disable_ the creation reactions in those compartments, in which the reaction rate vanishes and _enable_ them in all other compartments.
+
+  _Note_: A _disabled_ reaction is equivalent to a reaction with reaction rate 0.
+
+The SBML model file (`localized_reaction.xml') and the corresponding geometry file (`localized_reaction-imex.xml') are included in the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
