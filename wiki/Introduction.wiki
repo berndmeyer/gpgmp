@@ -4,18 +4,27 @@
 =Abstract=
 GPGMP provides an implementation of a spatially-resolved stochastic simulation algorithm on general-purpose graphics processing units (GPGPUs). This algorithm, designed to solve reaction-diffusion equations on a mesoscopic level, has widespread applications in computational biology, molecular chemistry and social systems research. For our implementation, we use the Gillespie multi-particle method, which is well-suited for GPGPUs. In preliminary tests, we could obtain speed ups of around 1-2 orders of magnitudes as compared to standard implementations on CPUs.
 
-=Reaction-Diffusion Equations=
-[http://www.scholarpedia.org/article/Reaction-diffusion_systems Reaction-diffusion equations] are concerned with systems consisting of one or more interacting entities which propagate in space through random processes thus exhibiting classical diffusive motion.
+=Reaction-Diffusion Networks=
+[http://www.scholarpedia.org/article/Reaction-diffusion_systems Reaction-diffusion networks] are systems consisting of one or more interacting entities (e.g. molecules in a solution) which propagate in space through random walks. _Macroscopically_, these systems obey a reaction-diffusion equation of the form
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="(del x_i)/(del t)=f_i(bb{x}) + D_i grad^2 x_i,"/>
+
+where *x* denotes the macroscopic state vector (e.g. the chemical concentration of each species), *f* describes the interactions and *D* are the diffusion constants for each species.
+
+In many [#Applications applications], most notably in a biological and chemical context, the number of participating agents is small and the inherently stochastic nature of the problem requires a _microscopic_ description of the system, in which the position of every species is known at all times. The macroscopic diffusion equation can be regained by appropriate statistic averaging.
+
+A microscopic approach, however, is often cumbersome and computer simulations to obtain realizations of reaction-diffusion networks are quite costly. Furthermore, it is often not necessary to distinguish between individual entities and a _mesoscopic_ approach is sufficient. In a mesoscopic description, the domain of interest is divided into small subvolumes of a convenient granularity. Instead of tracing the position of each individual particle through time, one then collectively keeps track of the number of particles in each subvolume.
+
 
 =Gillespie Multiparticle Algorithm=
 
 =Implementation on GPGPUs=
+
+=Applications=
 
 =Usage=
 
 ==Inchman==
 
 ==Source==
-<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="root3x + x^phi + x_1"/>
 
 http://img208.imageshack.us/img208/1723/reactiondiffusion.png
