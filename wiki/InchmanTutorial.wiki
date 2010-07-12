@@ -250,4 +250,25 @@ where L is the side length of the domain. Since there is no dependence on the y 
 
   _Note_: A _disabled_ reaction is equivalent to a reaction with reaction rate 0.
 
-The SBML model file (`localized_reaction.xml') and the corresponding geometry file (`localized_reaction-imex.xml') are included in the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
+The SBML model file (`localized_reaction.xml`) and the corresponding geometry file (`localized_reaction-imex.xml`) are included in the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
+
+We can analyze the results using `Matlab`:
+
+{{{
+>> [comps, specs, time, state]=read_inchman('/home/matthias/source/Matlab/results.csv');
+>> tmax=find(time==max(time))
+
+tmax =
+
+     9
+
+>> plot([state(tmax, :, 1)/32., state(tmax, :, 2)/32.], '-o')
+>> plot(state(tmax, :, 1)/32., '-o')
+>> hold all
+>> plot(state(tmax, :, 2)/32., '-o')
+>> xlabel('x [subvolume index]')
+>> ylabel('species count')
+>> legend('species A', 'species B', 'Location', 'NorthWest')
+}}}
+
+<img src='http://img4.imageshack.us/img4/654/inchmanlocalizedannihil.png' border='0'/>
