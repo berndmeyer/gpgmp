@@ -9,7 +9,7 @@ The first step is to define the reaction network in a valid [http://sbml.org SBM
 
 <wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up_content="A + B -> C"/>
 
-is sufficient. Here, C is a "dummy" species which we use to track the number of reactions. The corresponding SBML file `simple_annihilation.xml`, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/list Inchman example package].
+is sufficient. Here, C is a "dummy" species which we use to track the number of reactions. The corresponding SBML file `simple_annihilation.xml`, which is listed below, is part of the [http://code.google.com/p/gpgmp/downloads/detail?name=inchman_examples.tar.gz&can=2&q= example package].
 
 {{{
 <?xml version="1.0" encoding="utf-8"?>
