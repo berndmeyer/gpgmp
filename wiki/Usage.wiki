@@ -90,3 +90,9 @@ REAL p = 0.1; // Probability for a particle to stay
 REAL dumpTime = 1.; // Interval of output dumps
 testModel.runMultipleGmps(nRuns, nSteps, simTime, p, dumpTime);
 }}}
+The code should be self-explaining. You can find more information about the different classes we used here in the API documentation.
+
+We can run this test problem by typing
+{{{
+./gpgmp -p 5
+}}}. If everything goes well, you should have 
