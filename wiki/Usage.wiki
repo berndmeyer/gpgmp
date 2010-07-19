@@ -1,4 +1,5 @@
 #summary Usage instructions for GPGMP
+#sidebar SidebarHome
 
 = Introduction =
 GPGMP is basically a collection of C++ classes that can be used to build reaction-diffusion models and simulate them using a GPGPU-accelerated implementation of the Gillespie-Multiparticle algorithm. The downside of this approach is that the user will need to have some familiarity with C++ (although we provide some easy-to-use templates). The main benefit, however, is the great flexibility in creating models. Classes, and even the main simulation algorithm, can easily be extended to accommodate non-standard models.
