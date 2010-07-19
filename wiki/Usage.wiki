@@ -127,4 +127,4 @@ In order to read in HDF5 files in PYTHON, you need to have the extra package h5p
 >>> n, time, species, numRuns =gillespieio.read_gmp_hdf5("/home/matthias/data/output/test/tutorial/species")
 >>> plt.imshow(mean(n[:,4,2,:,:], 0))
 }}}
-<img src='http://img826.imageshack.us/img826/3500/speciescpython.png' border='0'/></a>
+<img src='http://img826.imageshack.us/img826/3500/speciescpython.png' border='0'/>
