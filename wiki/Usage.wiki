@@ -1,0 +1,45 @@
+#summary Usage instructions for GPGMP
+
+= Introduction =
+GPGMP is basically a collection of C++ classes that can be used to build reaction-diffusion models and simulate them using a GPGPU-accelerated implementation of the Gillespie-Multiparticle algorithm. The downside of this approach is that the user will need to have some familiarity with C++ (although we provide some easy-to-use templates). The main benefit, however, is the great flexibility in creating models. Classes, and even the main simulation algorithm, can easily be extended to accommodate non-standard models.
+
+= Prerequisites =
+You will need an NVIDIA CUDA graphics card and the following packages in order to compile and install GPGMP from source:
+
+  # [http://www.cmake.org/ CMake >=2.8.0]
+  # [http://www.hdfgroup.org/HDF5/ HDF5 >=1.8.4.-5]
+  # [http://developer.nvidia.com/object/cuda_3_1_downloads.html NVIDIA CUDA toolkit >=3.1]
+  # [http://www.gnu.org/software/gsl/ GNU scientific library]
+  # [http://www.stack.nl/~dimitri/doxygen/ Doxygen]
+
+= Tutorial =
+
+== Installation ==
+To get you started, we will walk through the main steps to create and run a simple model. Download the source and unpack it.
+
+{{{
+mvigeliu@msgln1 ~/temp> tar xzf gpgmp-1.0.0.tar.gz
+mvigeliu@msgln1 ~/temp> cd gpgmp-1.0.0
+}}}
+
+Unfortunately, CMake cannot find the location of GSL on its own and needs some help. Use your favourite text editor to open `CMakeLists.txt`, look for the following lines and change the path accordingly:
+{{{
+# there is no FindGSL script so we have to set the path
+# manually
+set (GSL_INCLUDE "/opt/sw/gsl-1.12/include/")
+set (GSL_LIBRARY "/opt/sw/gsl-1.12/lib/")
+}}}
+
+You should now be able to compile the test problems and create the API documentation:
+{{{
+mvigeliu@msgln1 ~/temp/gpgmp-1.0.0> cmake .
+mvigeliu@msgln1 ~/temp/gpgmp-1.0.0> make
+mvigeliu@msgln1 ~/temp/gpgmp-1.0.0> make doc
+}}}
+
+== Creating models ==
+All test models from the Supplementary Information of [References#Vigelius10 Vigelius et al. (2010)] can be found in the main file `main.cpp`. You can use them as templates or create your own model from scratch. For the purpose of this tutorial, we will have a look at problem Nr. 5:
+
+{{{
+
+}}}
