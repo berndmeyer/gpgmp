@@ -95,4 +95,7 @@ The code should be self-explaining. You can find more information about the diff
 We can run this test problem by typing
 {{{
 ./gpgmp -p 5
-}}}. If everything goes well, you should have 
+}}}
+If everything goes well, you should find the HDF output file `species.h5` in your home directory.
+
+== Analysing GPGMP output ==
