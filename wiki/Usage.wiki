@@ -83,7 +83,7 @@ testModel.addReaction(aplusbAnnihilation);
 testModel.setOutputFormat(gpgmp::OUTPUT_HDF5);
 
 // run the GMP to test the output
-int nRuns = 1; // Number of runs
+int nRuns = 100; // Number of runs
 int nSteps = 10000; // Max number of steps
 REAL simTime = 5.; // Max simulation time
 REAL p = 0.1; // Probability for a particle to stay
@@ -99,3 +99,31 @@ We can run this test problem by typing
 If everything goes well, you should find the HDF output file `species.h5` in your home directory.
 
 == Analysing GPGMP output ==
+The end results are stored in an HDF5 file called 'species.h5'. For convenience, we provide scripts to read GPGMP output files into MATLAB and PYTHON. These scripts can be found in the `analysis` package in the download section.
+
+=== Using Matlab ===
+We read in the output file and plot the distribution of species C.
+{{{
+>> [time, species, state]=read_gmp('/home/matthias/source/Matlab/species.h5');
+>> meanState = squeeze(mean(state, 1));
+>> maxC=max(max(meanState(5, 3, :, :)));
+>> image(double(squeeze(meanState(5, 3, :, :)))/maxC*255.)
+}}}
+<img src='http://img836.imageshack.us/img836/3831/speciesc.png' border='0'/>
+
+=== Using Python ===
+In order to read in HDF5 files in PYTHON, you need to have the extra package h5py installed. For the data analysis, we recommend using NUMPY and SciPy in combination with MatplotLib. We assume that all these packages are installed.
+{{{
+>>> from analysis.tools import gillespieio
+>>> from numpy import *
+>>> import math
+>>> import matplotlib
+>>> matplotlib.use('TkAgg')
+>>> matplotlib.rcParams['interactive'] = 'True'
+>>> import matplotlib.pyplot as plt
+/usr/lib/python2.6/dist-packages/pytz/__init__.py:32: UserWarning: Module matplotlib was already imported from /usr/lib/pymodules/python2.6/matplotlib/__init__.py, but /usr/lib/pymodules/python2.6 is being added to sys.path
+  from pkg_resources import resource_stream
+>>> n, time, species, numRuns =gillespieio.read_gmp_hdf5("/home/matthias/data/output/test/tutorial/species")
+>>> plt.imshow(mean(n[:,4,2,:,:], 0))
+}}}
+<img src='http://img826.imageshack.us/img826/3500/speciescpython.png' border='0'/></a>
