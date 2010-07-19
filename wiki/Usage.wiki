@@ -113,7 +113,7 @@ We read in the output file and plot the distribution of species C.
 <img src='http://img836.imageshack.us/img836/3831/speciesc.png' border='0'/>
 
 === Using Python ===
-In order to read in HDF5 files in PYTHON, you need to have the extra package h5py installed. For the data analysis, we recommend using NUMPY and SciPy in combination with MatplotLib. We assume that all these packages are installed.
+In order to read in HDF5 files in PYTHON, you need to have the extra package h5py installed. For the data analysis, we recommend using [http://numpy.scipy.org/ NumPy and SciPy] in combination with [http://matplotlib.sourceforge.net/ matplotlib]. We assume that all these packages are installed.
 {{{
 >>> import gillespieio
 >>> from numpy import *
