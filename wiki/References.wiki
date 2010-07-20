@@ -46,4 +46,4 @@ stochastic modelling of the phosphoenolpyruvate-dependent phosphotransferase
 (pts) pathway in escherichia coli. _Bioinformatics_, *22*(15), 1895–1901.
 
 ====Vigelius10====
-Vigelius, M., Meyer, B., and Lane, A. (2010). Accelerating Reaction-Diffusion Simulations with General-Purpose Graphics Processing Units. _in preparation_
+Vigelius, M., Lane, A. and  Meyer, B. (2010). Accelerating Reaction-Diffusion Simulations with General-Purpose Graphics Processing Units. _submitted_
