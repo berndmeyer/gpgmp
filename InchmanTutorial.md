@@ -1,0 +1,272 @@
+# Introduction #
+Inchman provides a convenient and simple way to run existing reaction-diffusion models on an GPGMP implementation without having to download and compile the source code. Users can define their reaction networks in [SBML](http://sbml.org/Main_Page) and upload it to Inchman. The geometry specifications and simulation parameters are defined through the web interface. The whole model can then be submitted to our GPU cluster and, upon successful execution, a summary of the results will be mailed to the user.
+
+# Running a simple example model #
+The first step is to define the reaction network in a valid [SBML](http://sbml.org) file. For the purpose of this tutorial, a simple model consisting of two species _A_ and _B_ and an annihilation reaction
+
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up\_content="A + B -> C"/>
+
+is sufficient. Here, C is a "dummy" species which we use to track the number of reactions. The corresponding SBML file `simple_annihilation.xml`, which is listed below, is part of the [example package](http://code.google.com/p/gpgmp/downloads/detail?name=inchman_examples.tar.gz&can=2&q=).
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Simple 2d annihilation model with two species (corresponding to annihilation.xml in MesoRD)
+-->
+<sbml xmlns="http://www.sbml.org/sbml/level2/version3" level="2" version="3">
+
+  <model name="Simple Annihilation">
+    <listOfCompartments>
+      <compartment id="World"/>
+    </listOfCompartments>
+
+    <listOfSpecies>
+      <species id="A" name="Species A"  initialAmount="0" compartment="World"/>
+      <species id="B" name="Species B"  initialAmount="0" compartment="World"/>
+      <species id="C" name="Species C"  initialAmount="0" compartment="World"/>
+    </listOfSpecies>
+
+    <listOfParameters>
+      <parameter id="k"  value="150.79"/>
+    </listOfParameters>
+
+    <listOfReactions>
+      <reaction id="Annihilation">
+        <listOfReactants>
+          <speciesReference species="A"/>
+          <speciesReference species="B"/>
+        </listOfReactants>
+	<listOfProducts>
+          <speciesReference species="C"/>
+	</listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k </ci>
+              <ci> A </ci>
+              <ci> B </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
+
+```
+Note that the `species` attributes `initialAmount` and `compartment` are only present to guarantee compliance with the SBML specification and will be ignored by Inchman. In fact, the geometry of the compartments and the initial amounts of the species will be specified at a [later stage](#Specifying_the_geometry.md). We will come to that in a minute.
+
+> _Note_: Currently, Inchman does not yet support dimensional parameters. Instead, reaction rates are assumed to be given in _per subvolume per second_. This requires the user to adapt model files if the number of grid cells in the model changes.
+
+> _Note_: GPGMP (and therefore Inchman) determines the correct rate law for a reaction automatically from the `listOfReactants' and supports zeroth- to second-order reactions. The MathML kinetic law given is only checked for consistency and will be ignored otherwise.
+
+## Upload the SBML file ##
+We are now ready to upload the model file to Inchman. Start Inchman by following the link to
+
+http://monash-inchman.appspot.com/.
+
+The web interface provides the functionality to upload SBML files and specify the compartment geometries, species diffusivities and initial amounts, and localize reactions to compartments. The user can also change runtime parameters and finally submit the simulation to our cluster.
+
+<img src='http://img695.imageshack.us/img695/3227/screenshottutorialuploa.png' border='0' width='700' height='450' />
+
+You can upload the SBML model file by going to the upper-left corner of the main screen. Before the user is allowed to go on, the model file is checked for syntactical validity. If your file is rejected, you can manually check it using the [SBML online validator](http://sbml.org/Facilities/Validator) and thus get an idea about possible problems with your code.
+
+> _Note_: After changing the local SBML file, you have to press the "Refresh" button of your browser in order to clear the server cache before uploading the new file!
+
+## Specifying the geometry ##
+
+<img src='http://img69.imageshack.us/img69/780/screenshottutorialgeome.png' border='0' width='700' height='450' />
+
+We now need to tell Inchman where the compartments are physically located. In the current version, the simulation domain is a 3-dimensional Cartesian grid divided into cuboid subvolumes (where the z-extension is only one subvolume, so effectively the simulation is 2.5 dimensional). Inchman only understands rectangular compartments which are defined by the position of the bottom-left corner and their width and height. The compartments are _declared_ in the underlying SBML model file but their geometry is _defined_ here. The reason for that dichotomy is that SBML does not understand spatially extended compartments and our main aim is to allow the user to upload existing models without changes.
+
+> _Note_: The position and extensions of the subvolumes are given in grid coordinates. Consequently, the user most likely would want to adapt these specifications if they change the granularity of the grid.
+
+Our model has only one compartment "World" defined which we want to span the whole simulation domain. We thus set the compartment geometry tuple to `(0,0,32,32)`.
+
+## Setting the species parameters ##
+
+<img src='http://img190.imageshack.us/img190/241/screenshottutorialspeci.png' border='0' width='700' height='450' />
+
+The `species` panel allows us to set the diffusivity (in units micrometer<sup>2</sup> s<sup>-1</sup>) and the initial particle count per compartment for each species.
+
+> _Note_: The given number of particles is distributed _homogeneously_ over the compartment, i.e. each subvolume of the compartment will contain exactly the same number of particles. If the total particle count cannot be divided evenly between the subvolume, rounding rules apply.
+
+> _Note_: If compartments are overlapping, the particle number in the overlapping region will be set by the last compartment in the list. If we define, for example, a compartment "Source" with extent `(16,16,1,1)` and initial count 10000 and another compartment "World" which covers the whole domain, `(0,0,32,32)`, and initial particle count 0, the overlapping region will contain no particles. It is best to avoid overlapping compartments.
+
+We set the diffusivity of all species to `1` and the initial amount of species A and B in the "World" compartment to `10000`. Initially, no particles of species C should be present so we set it to `0`.
+
+## Localizing the reactions ##
+<img src='http://img805.imageshack.us/img805/8796/screenshottutorialreact.png' border='0' width='700' height='450' />
+
+Inchman allows the user to localize reactions to particular compartment. If a reaction cannot occur in a particular compartment, the corresponding checkbox needs to be unticked. We do not use this feature in this tutorial model.
+
+## Running the model ##
+<img src='http://img143.imageshack.us/img143/524/screenshottutorialrun.png' border='0' width='700' height='450' />
+
+We are now in a position to run the model. First, it is recommended to download the geometry extensions for later reuse. Later on, you can always upload the specifications using the `Upload` button. The geometry specifications for this tutorial example can be found in the file `simple\_annihilation-imex.xml'.
+
+We set the physical extension of our model to 2 micrometers and the granularity to 32 cells per dimension.
+
+> _Note_: If you change the granularity of the simulation domain you would in most cases want to adapt the reaction rates and the compartment specifications!
+
+In order to get a good statistical average, we perform 10 runs (the results will be automatically averaged over all runs). We want the simulation to end at 0.1 s and receive intermediate outputs each 0.01 s. We allow a maximum number of diffusion steps of 100000.
+
+Upon hitting the `Simulate Model...` button, a window pops up asking the user to enter their e-mail address. The model will then be sent to the cluster and the user receives an email with the results (or an error message..) a little while later. Please check your spam folder if you do not get any mail.
+
+> Internally, the SBML model file and the geometry extensions are translated into C++ source code that utilizes the GPGMP library. The project is compiled and run on our GPU cluster. A PYTHON script controls the execution, collects the results and mails them back to you.
+
+# Analysis #
+If all went well, you should receive an e-mail with the results shortly after submission. The contents of the attached file `results.csv` should look like this:
+```
+# time	World
+# species A
+0	9216
+0.010026	677.5
+0.0200521	353.5
+0.030013	244.5
+0.0400391	188
+0.05	149.5
+0.0600261	130.5
+0.0700521	113.5
+0.080013	100
+0.0900391	89.5
+0.1	77.5
+
+# species B
+0	9216
+0.010026	677.5
+0.0200521	353.5
+0.030013	244.5
+0.0400391	188
+0.05	149.5
+0.0600261	130.5
+0.0700521	113.5
+0.080013	100
+0.0900391	89.5
+0.1	77.5
+
+# species C
+0	0
+0.010026	8538.5
+0.0200521	8862.5
+0.030013	8971.5
+0.0400391	9028
+0.05	9066.5
+0.0600261	9085.5
+0.0700521	9102.5
+0.080013	9116
+0.0900391	9126.5
+0.1	9138.5
+```
+The summary file contains the number of species in each compartment over time (averaged over all runs). If you need more detailed information, we recommend to build your models with the GPGMP library which allows to output the particle count in each subvolume individually.
+
+## Importing the output summary into MATLAB ##
+The results are written in a CSV format and can thus easily be imported into standard analysis software. For convenience, we provide a MATLAB script to extract useful information from a `results.csv` file. The script can be found in the `matlab` folder of the analysis package in the [download](http://code.google.com/p/gpgmp/downloads/list) section. We quickly demonstrate how to use this script.
+
+```
+>> [comps, specs, time, state]=read_inchman('/home/matthias/source/Matlab/results.csv');
+>> comps
+
+comps = 
+
+    'World'
+
+>> specs
+
+specs = 
+
+    'A'    'B'    'C'
+
+>> time
+
+time =
+
+         0
+    0.0100
+    0.0201
+    0.0300
+    0.0400
+    0.0500
+    0.0600
+    0.0701
+    0.0800
+    0.0900
+    0.1000
+
+>> plot(time, [state(:, 1, 1), state(:,1,3)], 'o')
+>> xlabel('time [s]')
+>> ylabel('species count')
+>> legend('species A', 'species C', 'Location', 'East')
+```
+
+Voila! You should get a plot similar to this one:
+
+<img src='http://img294.imageshack.us/img294/4418/annihilationresults.png' border='0' />
+
+This concludes the basic tutorial. Please have a look at [the other examples](#More_examples.md).
+
+# More examples #
+
+## Spatially homogeneous reaction networks ##
+GPGMP allows to simulate spatially homogeneous reaction networks by setting the diffusivity to `0`. A species with vanishing diffusivity will not diffuse and is therefore constrained to the subvolume where it is initially located. We demonstrate this feature with a simple reaction network with two species, `A` and `B`, two annihilation reactions,
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up\_content="A + A \stackrel{k\_1}{->} \emptyset,"/>
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up\_content="A + B \stackrel{k\_2}{->} \emptyset,"/>
+
+and two creation reactions,
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up\_content="\emptyset \stackrel{k\_3}{->}A,"/>
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up\_content="\emptyset \stackrel{k\_4}{->}B."/>
+
+Following [Erban et al. (2007)](References#Erban07.md), we choose the following parameter combination:
+| **Parameter** | **Rate** |
+|:--------------|:---------|
+| k<sub>1</sub> | 10<sup>-3</sup> s<sup>-1</sup> |
+| k<sub>2</sub> | 10<sup>-2</sup> s<sup>-1</sup> |
+| k<sub>3</sub> | 1.2 s<sup>-1</sup> |
+| k<sub>4</sub> | 1.0 s<sup>-1</sup> |
+
+The model file and the geometry extensions can be found in the  [example package](http://code.google.com/p/gpgmp/downloads/detail?name=inchman_examples.tar.gz&can=2&q=), under `simple_annihilation.xml` and `simple_annihilation-imex.xml`, respectively. Since both species have vanishing diffusivity, we run an independent simulation in each subvolume in parallel. By choosing a granularity of `128x128` and running `10` models, we effectively run a total of 163840 independent simulations! The output particle count can then easily be divided by `128x128` to get the average. We find an average count for species `A` of `9.6` and for species `B` of `12.1`, which, incidentally, agrees with [Erban et al. (2007)](References#Erban07.md).
+
+> _Note_: Due to the underlying GPGMP algorithm, an output of intermediate time steps is currently not possible if the diffusivity is 0. Only the final result will be printed.
+
+## Localized A+B annihilation problem ##
+The purpose of this example is two-fold:
+  1. To introduce the concept of localized reactions and
+  1. to demonstrate how spatially resolved output can be achieved using Inchman.
+
+> _Note_: We strongly recommend building more sophisticated models from source, in particular if you wish to have full access to the spatially resolved output data.
+
+The model used in this example consists of two species, A and B, and a reaction network identical to the [previous example](#Spatially_homogeneous_reaction_networks.md), with the only exception that the reaction rates of the creation reactions depend on the position in the computational domain as follows (cf. [Erban et al., 2007](References#Erban07.md)):
+
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up\_content="k\_3(x) = {(k\_3, x \le 9L/10), (0, x>9/10 L):}"/>
+
+and
+
+<wiki:gadget url="http://mathml-gadget.googlecode.com/svn/trunk/mathml-gadget.xml" border="0" up\_content="k\_4(x) = {(0, x \le 2L/5), (k\_4, x>2/5 L):}"/>
+
+where L is the side length of the domain. Since there is no dependence on the y coordinate, it is sufficient to define exactly one compartment for each subvolume along the x-axis. Obviously, a coarser granularity can be achieved by bundling several subvolumes in one compartment. Inchman allows to enable and disable reactions in individual compartments to achieve localization. For this example, we _disable_ the creation reactions in those compartments, in which the reaction rate vanishes and _enable_ them in all other compartments.
+
+> _Note_: A _disabled_ reaction is equivalent to a reaction with reaction rate 0.
+
+The SBML model file (`localized_reaction.xml`) and the corresponding geometry file (`localized_reaction-imex.xml`) are included in the [example package](http://code.google.com/p/gpgmp/downloads/detail?name=inchman_examples.tar.gz&can=2&q=).
+
+We can analyze the results using `Matlab`:
+
+```
+>> [comps, specs, time, state]=read_inchman('/home/matthias/source/Matlab/results.csv');
+>> tmax=find(time==max(time))
+
+tmax =
+
+     9
+
+>> plot([state(tmax, :, 1)/32., state(tmax, :, 2)/32.], '-o')
+>> plot(state(tmax, :, 1)/32., '-o')
+>> hold all
+>> plot(state(tmax, :, 2)/32., '-o')
+>> xlabel('x [subvolume index]')
+>> ylabel('species count')
+>> legend('species A', 'species B', 'Location', 'NorthWest')
+```
+
+<img src='http://img4.imageshack.us/img4/654/inchmanlocalizedannihil.png' border='0' />

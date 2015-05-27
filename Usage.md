@@ -1,0 +1,127 @@
+# Introduction #
+GPGMP is basically a collection of C++ classes that can be used to build reaction-diffusion models and simulate them using a GPGPU-accelerated implementation of the Gillespie-Multiparticle algorithm. The downside of this approach is that the user will need to have some familiarity with C++ (although we provide some easy-to-use templates). The main benefit, however, is the great flexibility in creating models. Classes, and even the main simulation algorithm, can easily be extended to accommodate non-standard models.
+
+# Prerequisites #
+You will need an NVIDIA CUDA graphics card and the following packages in order to compile and install GPGMP from source:
+
+  1. [CMake >=2.8.0](http://www.cmake.org/)
+  1. [HDF5 >=1.8.4.-5](http://www.hdfgroup.org/HDF5/)
+  1. [NVIDIA CUDA toolkit >=3.1](http://developer.nvidia.com/object/cuda_3_1_downloads.html)
+  1. [GNU scientific library](http://www.gnu.org/software/gsl/)
+  1. [Doxygen](http://www.stack.nl/~dimitri/doxygen/)
+
+# Tutorial #
+
+## Installation ##
+To get you started, we will walk through the main steps to create and run a simple model. Download the source and unpack it.
+
+```
+mvigeliu@msgln1 ~/temp> tar xzf gpgmp-1.0.0.tar.gz
+mvigeliu@msgln1 ~/temp> cd gpgmp-1.0.0
+```
+
+Unfortunately, CMake cannot find the location of GSL on its own and needs some help. Use your favourite text editor to open `CMakeLists.txt`, look for the following lines and change the path accordingly:
+```
+# there is no FindGSL script so we have to set the path
+# manually
+set (GSL_INCLUDE "/opt/sw/gsl-1.12/include/")
+set (GSL_LIBRARY "/opt/sw/gsl-1.12/lib/")
+```
+
+You should now be able to compile the test problems and create the API documentation:
+```
+mvigeliu@msgln1 ~/temp/gpgmp-1.0.0> cmake .
+mvigeliu@msgln1 ~/temp/gpgmp-1.0.0> make
+mvigeliu@msgln1 ~/temp/gpgmp-1.0.0> make doc
+```
+
+## Creating models ##
+All test models from the Supplementary Information of [Vigelius et al. (2010)](References#Vigelius10.md) can be found in the main file `src/main.cpp`. You can use them as templates or create your own model from scratch. For the purpose of this tutorial, we will have a look at problem Nr. 5, which sets up a simple A+B annihilation problem (Sec. 2.3.2. in the supplementary information of [Vigelius et al. (2010)](References#Vigelius10.md)).
+```
+// Sets up the A+B annihilation model
+REAL length = 12.8; // In micrometer
+REAL nx = 64; // Number of cells in each direction
+gpgmp::CDiffusionModel testModel(length, nx, nx);
+
+// add species to model
+REAL diffusivity = 1; // In micrometer^2 s^-1
+testModel.addDiffusionSpecies("A", diffusivity);
+testModel.addDiffusionSpecies("B", diffusivity);
+testModel.addDiffusionSpecies("C", diffusivity);
+
+
+// create "source" and "world" compartments
+gpgmp::CCompartment comp1("Source", 32, 32, 32, 32);
+gpgmp::CCompartment comp2("World",0, 0, 63, 63);
+
+// add species to compartment
+comp1.setInitialAmount("A", 1000, gpgmp::DIST_HOMOGENEOUS);
+comp2.setInitialAmount("B", 1000, gpgmp::DIST_RANDOM);
+
+// and add it to the main model
+testModel.addCompartment(0, comp1);
+testModel.addCompartment(1, comp2);
+
+// add the annihilation reaction
+// A+B -> C
+REAL reactionRate = 1e8; // Reaction rate in M^-1 s^-1
+
+// set the reaction products
+std::map<std::string, int> aplusbAnnihilationMap;
+aplusbAnnihilationMap["C"]=1;
+
+// and create the reaction
+gpgmp::CSecondOrderReaction *aplusbAnnihilation =
+		new gpgmp::CSecondOrderReaction("A plus B annihilation",
+		testModel.getSecondOrderReactionRate(reactionRate),
+		"A", "B", aplusbAnnihilationMap);
+testModel.addReaction(aplusbAnnihilation);
+
+// set output format
+testModel.setOutputFormat(gpgmp::OUTPUT_HDF5);
+
+// run the GMP to test the output
+int nRuns = 100; // Number of runs
+int nSteps = 10000; // Max number of steps
+REAL simTime = 5.; // Max simulation time
+REAL p = 0.1; // Probability for a particle to stay
+REAL dumpTime = 1.; // Interval of output dumps
+testModel.runMultipleGmps(nRuns, nSteps, simTime, p, dumpTime);
+```
+The code should be self-explaining. You can find more information about the different classes we used here in the API documentation.
+
+We can run this test problem by typing
+```
+./gpgmp -p 5
+```
+If everything goes well, you should find the HDF output file `species.h5` in your home directory.
+
+## Analysing GPGMP output ##
+The end results are stored in an HDF5 file called 'species.h5'. For convenience, we provide scripts to read GPGMP output files into MATLAB and PYTHON. These scripts can be found in the `analysis` package in the download section.
+
+### Using Matlab ###
+We read in the output file and plot the distribution of species C.
+```
+>> [time, species, state]=read_gmp('/home/matthias/source/Matlab/species.h5');
+>> meanState = squeeze(mean(state, 1));
+>> maxC=max(max(meanState(5, 3, :, :)));
+>> image(double(squeeze(meanState(5, 3, :, :)))/maxC*255.)
+```
+<img src='http://img836.imageshack.us/img836/3831/speciesc.png' border='0' />
+
+### Using Python ###
+In order to read in HDF5 files in PYTHON, you need to have the extra package h5py installed. For the data analysis, we recommend using [NumPy and SciPy](http://numpy.scipy.org/) in combination with [matplotlib](http://matplotlib.sourceforge.net/). We assume that all these packages are installed.
+```
+>>> import gillespieio
+>>> from numpy import *
+>>> import math
+>>> import matplotlib
+>>> matplotlib.use('TkAgg')
+>>> matplotlib.rcParams['interactive'] = 'True'
+>>> import matplotlib.pyplot as plt
+/usr/lib/python2.6/dist-packages/pytz/__init__.py:32: UserWarning: Module matplotlib was already imported from /usr/lib/pymodules/python2.6/matplotlib/__init__.py, but /usr/lib/pymodules/python2.6 is being added to sys.path
+  from pkg_resources import resource_stream
+>>> n, time, species, numRuns =gillespieio.read_gmp_hdf5("/home/matthias/data/output/test/tutorial/species")
+>>> plt.imshow(mean(n[:,4,2,:,:], 0))
+```
+<img src='http://img826.imageshack.us/img826/3500/speciescpython.png' border='0' />
